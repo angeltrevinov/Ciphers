@@ -11,3 +11,6 @@ Please note that you are required to include your name and student ID, as commen
 - ### Substitution Cipher
   - Encryption: It changes the letters from the original alphabet to the same position of the cipher alphabet
   - Decryption: It Changes the letters from the cipher alphabet to the same position of the original alphabet
+- ### Vigenère Cipher
+  - Encryption: It's the same as the shift cipher, but instead of providing a int key, we receive a string key, where the character of our keyword is gonna shift n times to the right, being n the position of the character of the key in the same position of our keyword their position in the alphabet.
+  - Decryption: It's the same as the shift cipher, but instead of providing a int key, we receive a string key, where the character of our keyword is gonna shift n times to the left, being n the position of the character of the key in the same position of our keyword their position in the alphabet.
