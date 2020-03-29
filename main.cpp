@@ -7,6 +7,7 @@
 
 using namespace std;
 
+// ===================== MAPS =======================
 // --------------------------------------------------
 void fillMap(
   std::map<char, int> &temp_map,
@@ -16,7 +17,6 @@ void fillMap(
     temp_map[str[i]] = i+1;
   }
 }
-
 // -------------------------------------------------
 void fillMapBackwords(
   //for alphabets that are coming backwords
@@ -27,7 +27,18 @@ void fillMapBackwords(
     temp_map[str[i]] = x;
   }
 }
+// -------------------------------------------------
+void fillMapValues(
+  std::map<char, char> &temp_map,
+  string strKeys,
+  string strValues
+) {
+  for (int i = 0; i < strKeys.length(); i++) {
+    temp_map[strKeys[i]] = strValues[i];
+  }
+}
 
+// ================ HELPERCIPHERS ==================
 // -------------------------------------------------
 string shiftToRight(
   // this shift is for maps that dont need their order modified
@@ -88,7 +99,6 @@ string shiftToRight(
 
   return result;
 }
-
 // -------------------------------------------------
 string shiftToRightBackwords(
   // this shift is for maps that come with descending order, basically does the
@@ -152,6 +162,7 @@ string shiftToRightBackwords(
   return result;
 }
 
+// ================== CIPHERS =======================
 // --------------------------------------------------
 string encryptShiftCipher(
   string strAlphabet,
@@ -159,7 +170,7 @@ string encryptShiftCipher(
   int    intKey
 ) {
 
-  std::map<char,int> Alphabet;
+  std::map<char, int> Alphabet;
   string             strEncrypt;
 
   fillMap(Alphabet, strAlphabet);
@@ -189,7 +200,37 @@ string decryptShiftCipher(
   );
   return strDecrypt;
 }
+// --------------------------------------------------
+string SubstitutionCipher(
+  // do to Substitution Cipher changing the values then we just reverse who is
+  // key and who is value inside our map
+  string strAlphabetKey,
+  string strAlphabetValue,
+  string strKeyword
+) {
+  std::map<char, char>:: iterator it;
+  std::map<char, char>            Alphabet;
+  string                          result = "";
 
+  fillMapValues(Alphabet, strAlphabetKey, strAlphabetValue);
+
+  for(int i = 0; i < strKeyword.length(); i++) {
+
+    it = Alphabet.find(strKeyword[i]);
+
+    if(
+      // check if we found our char
+      it != Alphabet.end()
+    ) {
+      result += it->second;
+    } else {
+      result += strKeyword[i];
+    }
+  }
+  return result;
+}
+
+// ================ INPUTCIPHERS ====================
 // --------------------------------------------------
 string useShiftCipher() {
   string option;
@@ -218,10 +259,45 @@ string useShiftCipher() {
   ) {
     return decryptShiftCipher(strAlphabet, strKeyword, intKey);
   } else {
-    return "Could not understand " << option;
+    return "Could not understand " + option;
+  }
+}
+// --------------------------------------------------
+string useSubstitutionCipher() {
+  string option;
+  string strAlphabet;
+  string strCipherAlphabet;
+  string strKeyword;
+
+  cout << "================================="  << endl;
+  cout << "Enter your Alphabet"                << endl;
+  getline(cin, strAlphabet);
+  cout << "Enter your Cipher Alphabet"         << endl;
+  getline(cin, strCipherAlphabet);
+  cout << "Enter your Keyword"                 << endl;
+  getline(cin, strKeyword);
+  cout << "Do you want to Encrypt or Decrypt?" << endl;
+  cin >> option;
+  cin.ignore();
+
+  if(
+    strAlphabet.length() != strCipherAlphabet.length()
+  ) {
+    return "Alphabet's size don't match ";
+  } else if(
+    option.compare("Encrypt") == 0
+  ) {
+    return SubstitutionCipher(strAlphabet, strCipherAlphabet, strKeyword);
+  } else if (
+    option.compare("Decrypt") == 0
+  ) {
+    return SubstitutionCipher(strCipherAlphabet, strAlphabet, strKeyword);
+  } else {
+    return "Could not understand " + option;
   }
 }
 
+// ==================== MAIN =======================
 // --------------------------------------------------
 int main() {
   string result;
@@ -236,6 +312,8 @@ int main() {
 
   if(intOption == 1) {
     result = useShiftCipher();
+  } else if (intOption == 2) {
+    result = useSubstitutionCipher();
   }
   cout << "================================="  << endl;
   cout << result                               << endl;
