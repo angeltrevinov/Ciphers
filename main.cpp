@@ -144,6 +144,7 @@ string encryptShiftCipher(
   string strKeyword,
   int    intKey
 ) {
+
   std::map<char,int> Alphabet;
   string             strEncrypt;
 
@@ -160,10 +161,12 @@ string encryptShiftCipher(
 string decryptShiftCipher(
   string strAlphabet,
   string strKeyword,
-  int intKey
+  int    intKey
 ){
+
   std::map<char, int, greater <char> > Alphabet;
   string              strDecrypt;
+
   fillMapBackwords(Alphabet, strAlphabet);
   strDecrypt = shiftToRightBackwords(
     Alphabet,
@@ -174,29 +177,50 @@ string decryptShiftCipher(
 }
 
 // --------------------------------------------------
-int main() {
+string useShiftCipher() {
+  string option;
   string strAlphabet;
   string strKeyword;
-  string result;
   int    intKey;
-  int    intOption;
 
-  cout << "What do you want to do?" << endl;
-  cout << "1. Encrypt Shift Cipher" << endl;
-  cout << "2. Decrypt Shift Cipher" << endl;
-  cin >> intOption;
-  cin.ignore();
+  cout << "=================================" << endl;
   cout << "Enter your Alphabet" << endl;
   getline(cin, strAlphabet);
   cout << "Enter your Keyword" << endl;
   getline(cin, strKeyword);
   cout << "Enter the Key" << endl;
   cin  >> intKey;
+  cout << "=================================" << endl;
+  cout << "Do you want to Encrypt or Decrypt?" << endl;
+  cin >> option;
+  cin.ignore();
+
+  if(
+    option.compare("Encrypt") == 0
+  ) {
+    return encryptShiftCipher(strAlphabet, strKeyword, intKey);
+  } else if(
+    option.compare("Decrypt") == 0
+  ) {
+    return decryptShiftCipher(strAlphabet, strKeyword, intKey);
+  } else {
+    return "Could not understand";
+  }
+}
+
+// --------------------------------------------------
+int main() {
+  string result;
+  int    intOption;
+
+  cout << "=================================" << endl;
+  cout << "What Cypher do you want to do?" << endl;
+  cout << "1. Encrypt Shift Cipher" << endl;
+  cin >> intOption;
+  cin.ignore();
 
   if(intOption == 1) {
-    result = encryptShiftCipher(strAlphabet, strKeyword, intKey);
-  } else if (intOption == 2) {
-    result = decryptShiftCipher(strAlphabet, strKeyword, intKey);
+    result = useShiftCipher();
   }
 
   cout << result << endl;
