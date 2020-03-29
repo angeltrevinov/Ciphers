@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -35,6 +36,28 @@ void fillMapValues(
 ) {
   for (int i = 0; i < strKeys.length(); i++) {
     temp_map[strKeys[i]] = strValues[i];
+  }
+}
+// -------------------------------------------------
+void fillKeywordVector(
+  // for keys that need to store their value in the position
+  // of a certain alphabet
+  std::map<char, int> &AlphabetMap,
+  vector<int> &vectorKey,
+  string strKey
+) {
+  for (int i = 0; i < strKey.length(); i++) {
+    vectorKey.push_back(AlphabetMap[strKey[i]]);
+  }
+}
+// --------------------------------------------------
+void fillKeywordVectorMapBackwords(
+  std::map<char, int, greater <char> > &temp_map,
+  vector<int> &vectorKey,
+  string strKey
+) {
+  for(int i = 0; i < strKey.length(); i++) {
+    vectorKey.push_back(temp_map[strKey[i]]);
   }
 }
 
@@ -171,15 +194,13 @@ string encryptShiftCipher(
 ) {
 
   std::map<char, int> Alphabet;
-  string             strEncrypt;
 
   fillMap(Alphabet, strAlphabet);
-  strEncrypt = shiftToRight(
+  return shiftToRight(
     Alphabet,
     strKeyword,
     intKey
   );
-  return strEncrypt;
 }
 
 // --------------------------------------------------
@@ -190,15 +211,13 @@ string decryptShiftCipher(
 ){
 
   std::map<char, int, greater <char> > Alphabet;
-  string                               strDecrypt;
 
   fillMapBackwords(Alphabet, strAlphabet);
-  strDecrypt = shiftToRightBackwords(
+  return shiftToRightBackwords(
     Alphabet,
     strKeyword,
     intKey
   );
-  return strDecrypt;
 }
 // --------------------------------------------------
 string SubstitutionCipher(
@@ -225,6 +244,69 @@ string SubstitutionCipher(
       result += it->second;
     } else {
       result += strKeyword[i];
+    }
+  }
+  return result;
+}
+
+// --------------------------------------------------
+string encryptVigenereCipher(
+  string strAlphabet,
+  string strKey,
+  string strKeyword
+) {
+  std::map<char, int> Alphabet;
+  vector<int>         Key;
+  string              result = "";
+  string              send;
+  int                 posVector;
+
+  fillMap(Alphabet, strAlphabet);
+  fillKeywordVector(Alphabet, Key, strKey);
+  posVector = 0;
+  for(int i = 0; i < strKeyword.length(); i++) {
+    send = "";
+    send.push_back(strKeyword[i]);
+    result += shiftToRight(Alphabet, send, Key[posVector]-1);
+
+    if (posVector < Key.size()-1) {
+      posVector++;
+    } else {
+      posVector = 0;
+    }
+  }
+
+  return result;
+}
+// --------------------------------------------------
+string decryptVigenereCipher(
+  string strAlphabet,
+  string strKey,
+  string strKeyword
+) {
+  std::map<char, int, greater <char> > Alphabet;
+  vector<int>                         Key;
+  string                              result = "";
+  string                              send;
+  int                                 posVector;
+
+  fillMapBackwords(Alphabet, strAlphabet);
+  fillKeywordVectorMapBackwords(Alphabet, Key, strKey);
+  posVector = 0;
+  for(int i = 0; i < strKeyword.length(); i++) {
+    send = "";
+    send.push_back(strKeyword[i]);
+    result += shiftToRightBackwords(
+      Alphabet,
+      send,
+      // we do this substraction because our alphabet is backwords
+      strAlphabet.length() - Key[posVector]
+    );
+
+    if(posVector < Key.size()-1) {
+      posVector++;
+    } else {
+      posVector = 0;
     }
   }
   return result;
@@ -296,6 +378,38 @@ string useSubstitutionCipher() {
     return "Could not understand " + option;
   }
 }
+// -------------------------------------------------
+string useVigenereCipher(
+  // basically is Shift Cipher but the key changes depending on the value
+  // of the character of our key on the alphabet
+) {
+  string strOption;
+  string strAlphabet;
+  string strKey;
+  string strKeyword;
+  cout << "================================="  << endl;
+  cout << "Enter your Alphabet"                << endl;
+  getline(cin, strAlphabet);
+  cout << "Enter your Key"                     << endl;
+  getline(cin, strKey);
+  cout << "Enter your Keyword"                 << endl;
+  getline(cin, strKeyword);
+  cout << "Do you want to Encrypt or Decrypt?" << endl;
+  cin >> strOption;
+  cin.ignore();
+
+  if(
+    strOption.compare("Encrypt") == 0
+  ) {
+    return encryptVigenereCipher(strAlphabet, strKey, strKeyword);
+  } else if (
+    strOption.compare("Decrypt") == 0
+  ) {
+    return decryptVigenereCipher(strAlphabet, strKey, strKeyword);
+  } else {
+    return "Could not understand " + strOption;
+  }
+}
 
 // ==================== MAIN =======================
 // --------------------------------------------------
@@ -307,6 +421,7 @@ int main() {
   cout << "What Cypher do you want to do?"    << endl;
   cout << "1. Shift Cipher"                   << endl;
   cout << "2. Substitution Cipher"            << endl;
+  cout << "3. Vigenere Cipher"                << endl;
   cin  >> intOption;
   cin.ignore();
 
@@ -314,6 +429,8 @@ int main() {
     result = useShiftCipher();
   } else if (intOption == 2) {
     result = useSubstitutionCipher();
+  } else if (intOption == 3) {
+    result = useVigenereCipher();
   }
   cout << "================================="  << endl;
   cout << result                               << endl;
