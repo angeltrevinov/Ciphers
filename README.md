@@ -1,4 +1,5 @@
 # Information security (TC-2027)
+[![time tracker](https://wakatime.com/badge/github/angeltrevinov/Ciphers.svg)](https://wakatime.com/badge/github/angeltrevinov/Ciphers)
 ## Homework 05
 
 In this homework, you will implement some classical ciphers. In all cases, assume that any symbol used in the plaintext/ciphertext that is not contained in the alphabet must be co- pied as it is, without any transformation. To implement these ciphers, feel free to use the programming language of your preference.
