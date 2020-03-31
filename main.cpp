@@ -60,6 +60,33 @@ void fillKeywordVectorMapBackwords(
     vectorKey.push_back(temp_map[strKey[i]]);
   }
 }
+// -------------------------------------------------
+void fillVectorKeyValue(
+  vector<int> &vectorKey,
+  string strKey
+) {
+  int intAux;
+  for(int i = 0; i < strKey.length(); i++) {
+    intAux = strKey[i] - 48;
+    if(
+      // Just makes sure that any number of our key doesnt pass the size
+      intAux > strKey.length()
+    ) {
+      return;
+    } else {
+      vectorKey.push_back(intAux);
+    }
+  }
+}
+// -------------------------------------------------
+void fillVectorString(
+  vector<char> &vector,
+  string str
+) {
+  for(int i = 0; i < str.length(); i++) {
+    vector.push_back(str[i]);
+  }
+}
 
 // ================ HELPERCIPHERS ==================
 // -------------------------------------------------
@@ -311,6 +338,84 @@ string decryptVigenereCipher(
   }
   return result;
 }
+// -------------------------------------------------
+string encryptPermutationCipher(
+  string strKey,
+  string strKeyword
+) {
+  vector<int>  Key;
+  vector<char> Letters;
+  string       strAux;
+  string       result;
+  int          intPos;
+  fillVectorKeyValue(Key, strKey);
+  if(
+    Key.size() != strKey.length()
+  ) {
+    return "A number inside the key is bigger than the size of the key";
+  } else {
+
+    intPos = 0;
+    while (intPos < strKeyword.length()) {
+      Letters.clear();
+      strAux = strKeyword.substr(intPos, strKey.length());
+      fillVectorString(Letters, strAux);
+
+      if(
+        Letters.size() < strKey.length()
+      ) {
+        for (int i = Letters.size(); i <= strAux.length(); i++) {
+          Letters.push_back('A');
+        }
+      }
+
+      for (int i = 0; i < Letters.size(); i++) {
+        result+= Letters[Key[i]-1];
+      }
+      intPos+= strKey.length();
+    }
+    return result;
+  }
+}
+// -------------------------------------------------
+string decryptPermutationCipher(
+  string strKey,
+  string strKeyword
+) {
+  vector<int>  Key;
+  vector<char> Letters;
+  vector<char> Result;
+  string       strAux;
+  string       result = "";
+  int          intPos;
+  fillVectorKeyValue(Key, strKey);
+  if(
+    Key.size() != strKey.length()
+  ) {
+    return "A number inside the key is bigger than the size of the key";
+  } else {
+    int intPos = 0;
+    while(intPos < strKeyword.length()) {
+      Letters.clear();
+      Result.clear();
+      for(int i = 0; i < strKey.length(); i++) {
+        Result.push_back(' ');
+      }
+
+      strAux = strKeyword.substr(intPos, strKey.length());
+      fillVectorString(Letters, strAux);
+
+      for (int i = 0; i < Letters.size(); i++) {
+        Result[Key[i]-1] = Letters[i];
+      }
+      for (int i = 0; i < Result.size(); i++) {
+        result += Result[i];
+      }
+      intPos+= strKey.length();
+    }
+    return result;
+  }
+}
 
 // ================ INPUTCIPHERS ====================
 // --------------------------------------------------
@@ -410,6 +515,32 @@ string useVigenereCipher(
     return "Could not understand " + strOption;
   }
 }
+// -------------------------------------------------
+string usePermutationCipher() {
+  string strOption;
+  string strKey;
+  string strKeyword;
+  cout << "================================="  << endl;
+  cout << "Enter your Key"                     << endl;
+  getline(cin, strKey);
+  cout << "Enter your keyword"                 << endl;
+  getline(cin, strKeyword);
+  cout << "Do you want to Encrypt or Decrypt"  << endl;
+  cin >> strOption;
+  cin.ignore();
+
+  if(
+    strOption.compare("Encrypt") == 0
+  ) {
+    return encryptPermutationCipher(strKey, strKeyword);
+  } else if (
+    strOption.compare("Decrypt") == 0
+  ) {
+    return decryptPermutationCipher(strKey, strKeyword);
+  } else {
+    return "Could not understand " + strOption;
+  }
+}
 
 // ==================== MAIN =======================
 // --------------------------------------------------
@@ -422,6 +553,7 @@ int main() {
   cout << "1. Shift Cipher"                   << endl;
   cout << "2. Substitution Cipher"            << endl;
   cout << "3. Vigenere Cipher"                << endl;
+  cout << "4. Permutation Cipher"             << endl;
   cin  >> intOption;
   cin.ignore();
 
@@ -431,6 +563,8 @@ int main() {
     result = useSubstitutionCipher();
   } else if (intOption == 3) {
     result = useVigenereCipher();
+  } else if (intOption == 4) {
+    result = usePermutationCipher();
   }
   cout << "================================="  << endl;
   cout << result                               << endl;
