@@ -14,3 +14,6 @@ Please note that you are required to include your name and student ID, as commen
 - ### Vigenère Cipher
   - Encryption: It's the same as the shift cipher, but instead of providing a int key, we receive a string key, where the character of our keyword is gonna shift n times to the right, being n the position of the character of the key in the same position of our keyword their position in the alphabet.
   - Decryption: It's the same as the shift cipher, but instead of providing a int key, we receive a string key, where the character of our keyword is gonna shift n times to the left, being n the position of the character of the key in the same position of our keyword their position in the alphabet.
+- ### Permutation Cipher
+  - Encryption: The key gives where the letter is going to be at the result of our cipher
+  - Decryption: It returns the letter to the original position from the plain text
