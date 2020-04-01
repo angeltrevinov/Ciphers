@@ -17,3 +17,6 @@ Please note that you are required to include your name and student ID, as commen
 - ### Permutation Cipher
   - Encryption: The key gives where the letter is going to be at the result of our cipher
   - Decryption: It returns the letter to the original position from the plain text
+- ### Transposition CIPHER
+  - Encryption: You put the keyword inside a matrix, where the key is the number of columns and the rows are how many times does the key can fit inside the string.
+  - Decryption: Its the same but this time the key is the number of rows. 

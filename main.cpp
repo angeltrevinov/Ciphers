@@ -87,6 +87,21 @@ void fillVectorString(
     vector.push_back(str[i]);
   }
 }
+// -------------------------------------------------
+void fillMatrix(
+  vector<vector<int> > &Matrix,
+  int intRow,
+  int intCol,
+  string str
+) {
+  int intCont = 0;
+  for(int i = 0; i < intRow; i++) {
+    for(int j = 0; j < intCol; j++) {
+      Matrix[i][j] = str[intCont];
+      intCont++;
+    }
+  }
+}
 
 // ================ HELPERCIPHERS ==================
 // -------------------------------------------------
@@ -416,6 +431,51 @@ string decryptPermutationCipher(
     return result;
   }
 }
+// --------------------------------------------------
+string TranspositionCipher(
+  // Option help us determine how to fill out matrix
+  string strKeyword,
+  int intKey,
+  int intOption
+) {
+  string strResult = "";
+  int    intRow;
+  int    intCol;
+
+  if (
+    // we are encrypting
+    intOption == 0
+  ) {
+    intRow = strKeyword.length() / intKey;
+    intCol = intKey;
+    if (
+      strKeyword.length() % intKey > 0
+    ){
+      intRow++;
+    }
+  } else {
+    intCol = strKeyword.length() / intKey;
+    intRow = intKey;
+    if (
+      strKeyword.length() % intKey > 0
+    ){
+      intCol++;
+    }
+  }
+
+  vector<vector<int> > Matrix(intRow, vector<int>(intCol));
+
+  fillMatrix(Matrix, intRow, intCol, strKeyword);
+
+  for(int i = 0; i < intCol; i++) {
+    for(int j = 0; j < intRow; j++) {
+      strResult += Matrix[j][i];
+    }
+  }
+
+  return strResult;
+
+}
 
 // ================ INPUTCIPHERS ====================
 // --------------------------------------------------
@@ -541,6 +601,33 @@ string usePermutationCipher() {
     return "Could not understand " + strOption;
   }
 }
+// ---------------------------------------------------
+string useTranspositionCipher() {
+  string strOption;
+  string strKeyword;
+  int    intKey;
+  cout << "================================="  << endl;
+  cout << "Enter your Key"                     << endl;
+  cin  >> intKey;
+  cin.ignore();
+  cout << "Enter your Keyword"  << endl;
+  getline(cin, strKeyword);
+  cout << "Do you want to Encrypt or Decrypt?" << endl;
+  cin >> strOption;
+  cin.ignore();
+
+  if (
+    strOption.compare("Encrypt") == 0
+  ) {
+    return TranspositionCipher(strKeyword, intKey, 0);
+  } else if (
+    strOption.compare("Decrypt") == 0
+  ) {
+    return TranspositionCipher(strKeyword, intKey, 1);
+  } else {
+    return "Could not understand " + strOption;
+  }
+}
 
 // ==================== MAIN =======================
 // --------------------------------------------------
@@ -554,6 +641,7 @@ int main() {
   cout << "2. Substitution Cipher"            << endl;
   cout << "3. Vigenere Cipher"                << endl;
   cout << "4. Permutation Cipher"             << endl;
+  cout << "5. Transposition Cipher"           << endl;
   cin  >> intOption;
   cin.ignore();
 
@@ -565,6 +653,8 @@ int main() {
     result = useVigenereCipher();
   } else if (intOption == 4) {
     result = usePermutationCipher();
+  } else if (intOption == 5) {
+    result = useTranspositionCipher();
   }
   cout << "================================="  << endl;
   cout << result                               << endl;
