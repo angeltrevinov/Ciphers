@@ -8,7 +8,7 @@
 
 using namespace std;
 
-// ===================== MAPS =======================
+// =============== STRUCTURESFILLER =================
 // --------------------------------------------------
 void fillMap(
   std::map<char, int> &temp_map,
@@ -244,7 +244,6 @@ string encryptShiftCipher(
     intKey
   );
 }
-
 // --------------------------------------------------
 string decryptShiftCipher(
   string strAlphabet,
@@ -290,7 +289,6 @@ string SubstitutionCipher(
   }
   return result;
 }
-
 // --------------------------------------------------
 string encryptVigenereCipher(
   string strAlphabet,
