@@ -19,6 +19,15 @@ void fillMap(
   }
 }
 // -------------------------------------------------
+void fillMapAlphabetValues(
+  std::map<int, char> &temp_map,
+  string              str
+) {
+  for(int i = 0; i < str.length(); i++) {
+    temp_map[i] = str[i];
+  }
+}
+// -------------------------------------------------
 void fillMapBackwords(
   //for alphabets that are coming backwords
   std::map<char, int, greater <char> > &temp_map,
@@ -474,6 +483,42 @@ string TranspositionCipher(
   return strResult;
 
 }
+// --------------------------------------------------
+string encryptMultiplicationCipher() {
+  std::map<char, int>::iterator it;
+  std::map<char, int> Alphabet;
+  std::map<int, char> AlphabetValue;
+  string strKey;
+  string strAlphabet;
+  string strKeyword;
+  string strResult = "";
+  int intKey;
+  int Pos;
+
+  cout << "================================="  << endl;
+  cout << "Enter your Alphabet"                << endl;
+  getline(cin, strAlphabet);
+  cout << "Enter your Keyword"                 << endl;
+  getline(cin, strKeyword);
+  cout << "Enter your Key"                     << endl;
+  cin >> intKey;
+
+  fillMap(Alphabet, strAlphabet);
+  fillMapAlphabetValues(AlphabetValue, strAlphabet);
+
+  for(int i = 0; i < strKeyword.length(); i++) {
+    it = Alphabet.find(strKeyword[i]);
+    if(
+      it != Alphabet.end()
+    ){
+      Pos = ((it->second-1) * intKey)%26;
+      strResult += AlphabetValue[Pos];
+    } else {
+      strResult += strKeyword[i];
+    }
+  }
+  return strResult;
+}
 
 // ================ INPUTCIPHERS ====================
 // --------------------------------------------------
@@ -640,6 +685,7 @@ int main() {
   cout << "3. Vigenere Cipher"                << endl;
   cout << "4. Permutation Cipher"             << endl;
   cout << "5. Transposition Cipher"           << endl;
+  cout << "6. Encrypt Multiplication Cipher"  << endl;
   cin  >> intOption;
   cin.ignore();
 
@@ -653,6 +699,8 @@ int main() {
     result = usePermutationCipher();
   } else if (intOption == 5) {
     result = useTranspositionCipher();
+  } else if (intOption == 6) {
+    result = encryptMultiplicationCipher();
   }
   cout << "================================="  << endl;
   cout << result                               << endl;
