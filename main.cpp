@@ -117,6 +117,7 @@ void fillMatrix(
 string generateRandomString(int size) {
   string result = "";
   char   alphabet[] = "01";
+  srand(time(0));
   for(int i = 0; i < size; i++) {
     result += alphabet[rand() %(sizeof(alphabet) - 1)];
   }
@@ -127,7 +128,7 @@ string generateKeyPermutation(int size) {
   string result = "";
   vector<int> storage;
   int aux;
-
+  srand(time(0));
   for(int i = 1; i <= size; i++) {
     storage.push_back(i);
   }
@@ -729,6 +730,7 @@ void fillBunchPermutation() {
   vector<string> plainText;
   vector<string> cipherText;
   int            intMany;
+  int            intOption;
   string         aux;
   string         key;
   string         firstFile;
@@ -740,6 +742,8 @@ void fillBunchPermutation() {
   cin  >> firstFile;
   cout << "Name to store your cipher strings?" << endl;
   cin >> secondFile;
+  cout << "Do you want a 1.random key or 2.your own?" << endl;
+  cin >> intOption;
 
   // generate our plain strings
   for (int i = 0; i < intMany; i++) {
@@ -753,7 +757,12 @@ void fillBunchPermutation() {
       plainText.push_back(aux);
     }
   }
-  key = generateKeyPermutation(25);
+  if (intOption == 1) {
+    key = generateKeyPermutation(25);
+  } else if (intOption == 2) {
+    cout << "Enter Key, numbers divided by -" << endl;
+    cin >> key;
+  }
   cout << "Key= " << key << endl;
   cout << "=================================" << endl;
   aux = "";
