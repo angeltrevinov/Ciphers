@@ -78,22 +78,16 @@ void fillVectorKeyValue(
   int intAux;
   string strAux;
   for(int i = 0; i < strKey.length(); i++) {
-    if(strKey[i] == ' ') {
+    if(strKey[i] == '-') {
       intAux = stoi(strAux);
-      if(
-        // Just makes sure that any number of our key doesnt
-        // pass the size
-        intAux > strKey.length()
-      ) {
-        return;
-      } else {
-        vectorKey.push_back(intAux);
-      }
+      vectorKey.push_back(intAux);
       strAux = "";
     } else {
       strAux += strKey[i];
     }
   }
+  intAux = stoi(strAux);
+  vectorKey.push_back(intAux);
 }
 // ---------------------------------------------------------
 void fillVectorString(
@@ -131,15 +125,21 @@ string generateRandomString(int size) {
 // ---------------------------------------------------------
 string generateKeyPermutation(int size) {
   string result = "";
+  vector<int> storage;
   int aux;
+
+  for(int i = 1; i <= size; i++) {
+    storage.push_back(i);
+  }
+
+  // loop to create new number
   for(int i = 0; i < size; i++) {
-    aux = rand() % size;
-    if(aux != 0) {
-      result += std::to_string(aux);
-      result += ' ';
-    } else {
-      i--;
+    aux = rand() % storage.size();
+    result += std::to_string(storage[aux]);
+    if (i < size-1) {
+      result += '-';
     }
+    storage.erase(storage.begin() + aux);
   }
   return result;
 }
@@ -154,7 +154,10 @@ void fillFile(
   for(int i = 0; i < collection.size(); i++) {
     aux = collection[i];
     for(int j = 0; j < aux.length(); j++) {
-      myfile << aux[j] << ",";
+      myfile << aux[j];
+      if (j < aux.length()-1) {
+        myfile << ",";
+      }
     }
     myfile << "\n";
   }
@@ -462,7 +465,7 @@ string decryptPermutationCipher(
   int          intPos;
   fillVectorKeyValue(Key, strKey);
   if(
-    Key.size() != strKey.length()
+    Key.size() > strKey.length()
   ) {
     return "A number inside the key is bigger than the size of the key";
   } else {
@@ -676,7 +679,7 @@ string usePermutationCipher() {
   cout << "================================="  << endl;
   cout << "Enter your Key"                     << endl;
   getline(cin, strKey);
-  cout << "Enter your keyword"                 << endl;
+  cout << "Enter your keyword, separate by -"  << endl;
   getline(cin, strKeyword);
   cout << "Do you want to Encrypt or Decrypt"  << endl;
   cin >> strOption;
