@@ -677,9 +677,9 @@ string usePermutationCipher() {
   string strKey;
   string strKeyword;
   cout << "================================="  << endl;
-  cout << "Enter your Key"                     << endl;
+  cout << "Enter your Key, enter divided by -" << endl;
   getline(cin, strKey);
-  cout << "Enter your keyword, separate by -"  << endl;
+  cout << "Enter your keyword"                 << endl;
   getline(cin, strKeyword);
   cout << "Do you want to Encrypt or Decrypt"  << endl;
   cin >> strOption;
