@@ -5,11 +5,12 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
-// =============== STRUCTURESFILLER =================
-// --------------------------------------------------
+// =============== STRUCTURESFILLER ========================
+// ---------------------------------------------------------
 void fillMap(
   std::map<char, int> &temp_map,
   string              str
@@ -18,7 +19,7 @@ void fillMap(
     temp_map[str[i]] = i+1;
   }
 }
-// -------------------------------------------------
+// ---------------------------------------------------------
 void fillMapAlphabetValues(
   std::map<int, char> &temp_map,
   string              str
@@ -27,7 +28,7 @@ void fillMapAlphabetValues(
     temp_map[i] = str[i];
   }
 }
-// -------------------------------------------------
+// ---------------------------------------------------------
 void fillMapBackwords(
   //for alphabets that are coming backwords
   std::map<char, int, greater <char> > &temp_map,
@@ -37,7 +38,7 @@ void fillMapBackwords(
     temp_map[str[i]] = x;
   }
 }
-// -------------------------------------------------
+// ---------------------------------------------------------
 void fillMapValues(
   std::map<char, char> &temp_map,
   string strKeys,
@@ -47,7 +48,7 @@ void fillMapValues(
     temp_map[strKeys[i]] = strValues[i];
   }
 }
-// -------------------------------------------------
+// ---------------------------------------------------------
 void fillKeywordVector(
   // for keys that need to store their value in the position
   // of a certain alphabet
@@ -59,7 +60,7 @@ void fillKeywordVector(
     vectorKey.push_back(AlphabetMap[strKey[i]]);
   }
 }
-// --------------------------------------------------
+// ---------------------------------------------------------
 void fillKeywordVectorMapBackwords(
   std::map<char, int, greater <char> > &temp_map,
   vector<int> &vectorKey,
@@ -69,25 +70,32 @@ void fillKeywordVectorMapBackwords(
     vectorKey.push_back(temp_map[strKey[i]]);
   }
 }
-// -------------------------------------------------
+// ---------------------------------------------------------
 void fillVectorKeyValue(
   vector<int> &vectorKey,
   string strKey
 ) {
   int intAux;
+  string strAux;
   for(int i = 0; i < strKey.length(); i++) {
-    intAux = strKey[i] - 48;
-    if(
-      // Just makes sure that any number of our key doesnt pass the size
-      intAux > strKey.length()
-    ) {
-      return;
+    if(strKey[i] == ' ') {
+      intAux = stoi(strAux);
+      if(
+        // Just makes sure that any number of our key doesnt
+        // pass the size
+        intAux > strKey.length()
+      ) {
+        return;
+      } else {
+        vectorKey.push_back(intAux);
+      }
+      strAux = "";
     } else {
-      vectorKey.push_back(intAux);
+      strAux += strKey[i];
     }
   }
 }
-// -------------------------------------------------
+// ---------------------------------------------------------
 void fillVectorString(
   vector<char> &vector,
   string str
@@ -96,7 +104,7 @@ void fillVectorString(
     vector.push_back(str[i]);
   }
 }
-// -------------------------------------------------
+// ---------------------------------------------------------
 void fillMatrix(
   vector<vector<int> > &Matrix,
   int intRow,
@@ -111,11 +119,53 @@ void fillMatrix(
     }
   }
 }
+// ---------------------------------------------------------
+string generateRandomString(int size) {
+  string result = "";
+  char   alphabet[] = "01";
+  for(int i = 0; i < size; i++) {
+    result += alphabet[rand() %(sizeof(alphabet) - 1)];
+  }
+  return result;
+}
+// ---------------------------------------------------------
+string generateKeyPermutation(int size) {
+  string result = "";
+  int aux;
+  for(int i = 0; i < size; i++) {
+    aux = rand() % size;
+    if(aux != 0) {
+      result += std::to_string(aux);
+      result += ' ';
+    } else {
+      i--;
+    }
+  }
+  return result;
+}
+//----------------------------------------------------------
+void fillFile(
+  vector<string> &collection,
+  string strName
+) {
+  ofstream myfile;
+  string aux = "";
+  myfile.open(strName);
+  for(int i = 0; i < collection.size(); i++) {
+    aux = collection[i];
+    for(int j = 0; j < aux.length(); j++) {
+      myfile << aux[j] << ",";
+    }
+    myfile << "\n";
+  }
+  myfile.close();
+}
 
-// ================ HELPERCIPHERS ==================
-// -------------------------------------------------
+// ================ HELPERCIPHERS ==========================
+// ---------------------------------------------------------
 string shiftToRight(
-  // this shift is for maps that dont need their order modified
+  // this shift is for maps that dont need their order
+  // modified
   std::map<char, int> &temp_map,
   string              str,
   int                 intKey
@@ -173,10 +223,11 @@ string shiftToRight(
 
   return result;
 }
-// -------------------------------------------------
+// --------------------------------------------------------
 string shiftToRightBackwords(
-  // this shift is for maps that come with descending order, basically does the
-  // same but due to how maps work needs to be another function
+  // this shift is for maps that come with descending order,
+  // basically does the same but due to how maps work needs
+  // to be another function
   std::map<char, int, greater <char> > &temp_map,
   string                               str,
   int                                  intKey
@@ -236,8 +287,8 @@ string shiftToRightBackwords(
   return result;
 }
 
-// ================== CIPHERS =======================
-// --------------------------------------------------
+// ================== CIPHERS ==============================
+// ---------------------------------------------------------
 string encryptShiftCipher(
   string strAlphabet,
   string strKeyword,
@@ -253,7 +304,7 @@ string encryptShiftCipher(
     intKey
   );
 }
-// --------------------------------------------------
+// ---------------------------------------------------------
 string decryptShiftCipher(
   string strAlphabet,
   string strKeyword,
@@ -269,10 +320,10 @@ string decryptShiftCipher(
     intKey
   );
 }
-// --------------------------------------------------
+// ---------------------------------------------------------
 string SubstitutionCipher(
-  // do to Substitution Cipher changing the values then we just reverse who is
-  // key and who is value inside our map
+  // do to Substitution Cipher changing the values then we
+  // just reverse who is key and who is value inside our map
   string strAlphabetKey,
   string strAlphabetValue,
   string strKeyword
@@ -298,7 +349,7 @@ string SubstitutionCipher(
   }
   return result;
 }
-// --------------------------------------------------
+// ---------------------------------------------------------
 string encryptVigenereCipher(
   string strAlphabet,
   string strKey,
@@ -327,7 +378,7 @@ string encryptVigenereCipher(
 
   return result;
 }
-// --------------------------------------------------
+// ---------------------------------------------------------
 string decryptVigenereCipher(
   string strAlphabet,
   string strKey,
@@ -360,46 +411,45 @@ string decryptVigenereCipher(
   }
   return result;
 }
-// -------------------------------------------------
-string encryptPermutationCipher(
-  string strKey,
-  string strKeyword
-) {
-  vector<int>  Key;
-  vector<char> Letters;
-  string       strAux;
-  string       result;
-  int          intPos;
-  fillVectorKeyValue(Key, strKey);
-  if(
-    Key.size() != strKey.length()
+  // -------------------------------------------------
+  string encryptPermutationCipher(
+    string strKey,
+    string strKeyword
   ) {
-    return "A number inside the key is bigger than the size of the key";
-  } else {
+    vector<int>  Key;
+    vector<char> Letters;
+    string       strAux;
+    string       result;
+    int          intPos;
+    fillVectorKeyValue(Key, strKey);
+    if(
+      Key.size() > strKey.length()
+    ) {
+      return "A number inside the key is bigger than the size of the key";
+    } else {
 
-    intPos = 0;
-    while (intPos < strKeyword.length()) {
-      Letters.clear();
-      strAux = strKeyword.substr(intPos, strKey.length());
-      fillVectorString(Letters, strAux);
+      intPos = 0;
+      while (intPos < strKeyword.length()) {
+        Letters.clear();
+        strAux = strKeyword.substr(intPos, strKey.length());
+        fillVectorString(Letters, strAux);
 
-      if(
-        Letters.size() < strKey.length()
-      ) {
-        for (int i = Letters.size(); i <= strAux.length(); i++) {
-          Letters.push_back('A');
+        if(
+          Letters.size() < Key.size()
+        ) {
+          for (int i = Letters.size(); i <= strAux.length(); i++) {
+            Letters.push_back('A');
+          }
         }
+        for (int i = 0; i < Letters.size(); i++) {
+          result+= Letters[Key[i]-1];
+        }
+        intPos+= strKey.length();
       }
-
-      for (int i = 0; i < Letters.size(); i++) {
-        result+= Letters[Key[i]-1];
-      }
-      intPos+= strKey.length();
+      return result;
     }
-    return result;
   }
-}
-// -------------------------------------------------
+// ---------------------------------------------------------
 string decryptPermutationCipher(
   string strKey,
   string strKeyword
@@ -438,7 +488,7 @@ string decryptPermutationCipher(
     return result;
   }
 }
-// --------------------------------------------------
+// ---------------------------------------------------------
 string TranspositionCipher(
   // Option help us determine how to fill out matrix
   string strKeyword,
@@ -483,7 +533,7 @@ string TranspositionCipher(
   return strResult;
 
 }
-// --------------------------------------------------
+// ---------------------------------------------------------
 string encryptMultiplicationCipher() {
   std::map<char, int>::iterator it;
   std::map<char, int> Alphabet;
@@ -520,8 +570,8 @@ string encryptMultiplicationCipher() {
   return strResult;
 }
 
-// ================ INPUTCIPHERS ====================
-// --------------------------------------------------
+// ================ INPUTCIPHERS ===========================
+// ---------------------------------------------------------
 string useShiftCipher() {
   string option;
   string strAlphabet;
@@ -552,7 +602,7 @@ string useShiftCipher() {
     return "Could not understand " + option;
   }
 }
-// --------------------------------------------------
+// ---------------------------------------------------------
 string useSubstitutionCipher() {
   string option;
   string strAlphabet;
@@ -586,10 +636,10 @@ string useSubstitutionCipher() {
     return "Could not understand " + option;
   }
 }
-// -------------------------------------------------
+// ---------------------------------------------------------
 string useVigenereCipher(
-  // basically is Shift Cipher but the key changes depending on the value
-  // of the character of our key on the alphabet
+  // basically is Shift Cipher but the key changes depending
+  // on the value of the character of our key on the alphabet
 ) {
   string strOption;
   string strAlphabet;
@@ -618,7 +668,7 @@ string useVigenereCipher(
     return "Could not understand " + strOption;
   }
 }
-// -------------------------------------------------
+// ---------------------------------------------------------
 string usePermutationCipher() {
   string strOption;
   string strKey;
@@ -644,7 +694,7 @@ string usePermutationCipher() {
     return "Could not understand " + strOption;
   }
 }
-// ---------------------------------------------------
+// ---------------------------------------------------------
 string useTranspositionCipher() {
   string strOption;
   string strKeyword;
@@ -671,9 +721,52 @@ string useTranspositionCipher() {
     return "Could not understand " + strOption;
   }
 }
+// ---------------------------------------------------------
+void fillBunchPermutation() {
+  vector<string> plainText;
+  vector<string> cipherText;
+  int            intMany;
+  string         aux;
+  string         key;
+  string         firstFile;
+  string         secondFile;
+  cout << "=================================" << endl;
+  cout << "How many do you need?"             << endl;
+  cin  >> intMany;
+  cout << "Name to store your plain strings?" << endl;
+  cin  >> firstFile;
+  cout << "Name to store your cipher strings?" << endl;
+  cin >> secondFile;
 
-// ==================== MAIN =======================
-// --------------------------------------------------
+  // generate our plain strings
+  for (int i = 0; i < intMany; i++) {
+    aux = generateRandomString(25);
+    if(
+      // check if its not 0
+      aux.compare("0000000000000000000000000") == 0
+    ) {
+      i--;
+    } else {
+      plainText.push_back(aux);
+    }
+  }
+  key = generateKeyPermutation(25);
+  cout << "Key= " << key << endl;
+  cout << "=================================" << endl;
+  aux = "";
+  // generate cipher text
+  for(int i = 0; i < intMany; i++) {
+    aux = encryptPermutationCipher(key, plainText[i]);
+    cipherText.push_back(aux);
+  }
+
+  fillFile(plainText, firstFile);
+  fillFile(cipherText, secondFile);
+
+}
+
+// ==================== MAIN ===============================
+// ---------------------------------------------------------
 int main() {
   string result;
   int    intOption;
@@ -686,6 +779,7 @@ int main() {
   cout << "4. Permutation Cipher"             << endl;
   cout << "5. Transposition Cipher"           << endl;
   cout << "6. Encrypt Multiplication Cipher"  << endl;
+  cout << "7. generate a ton of permutation"  << endl;
   cin  >> intOption;
   cin.ignore();
 
@@ -701,6 +795,9 @@ int main() {
     result = useTranspositionCipher();
   } else if (intOption == 6) {
     result = encryptMultiplicationCipher();
+  } else if (intOption == 7) {
+    fillBunchPermutation();
+    result = "done";
   }
   cout << "================================="  << endl;
   cout << result                               << endl;
