@@ -117,7 +117,6 @@ void fillMatrix(
 string generateRandomString(int size) {
   string result = "";
   char   alphabet[] = "01";
-  srand(time(0));
   for(int i = 0; i < size; i++) {
     result += alphabet[rand() %(sizeof(alphabet) - 1)];
   }
@@ -128,7 +127,6 @@ string generateKeyPermutation(int size) {
   string result = "";
   vector<int> storage;
   int aux;
-  srand(time(0));
   for(int i = 1; i <= size; i++) {
     storage.push_back(i);
   }
@@ -744,6 +742,7 @@ void fillBunchPermutation() {
   cin >> secondFile;
   cout << "Do you want a 1.random key or 2.your own?" << endl;
   cin >> intOption;
+  srand(time(NULL));
 
   // generate our plain strings
   for (int i = 0; i < intMany; i++) {
